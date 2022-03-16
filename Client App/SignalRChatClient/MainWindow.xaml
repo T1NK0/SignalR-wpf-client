@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:SignalRChatClient"
         mc:Ignorable="d"
         Title="SignalR Chat WPF Client" Height="436" Width="782">
-    <Grid Margin="0,0,193.333,50.667">
+    <Grid Margin="97,33,97,17">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="109*"/>
             <ColumnDefinition Width="288*"/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="messagesList" HorizontalAlignment="Left" Height="141" Margin="139,0,0,0" VerticalAlignment="Center" Width="311" RenderTransformOrigin="-0.304,0.109" BorderThickness="1" Grid.ColumnSpan="2" BorderBrush="Gainsboro"/>
+        <Button Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="88,0,0,0" VerticalAlignment="Center" Click="Button_Click" FontSize="42"/>
 
     </Grid>
 </Window>
