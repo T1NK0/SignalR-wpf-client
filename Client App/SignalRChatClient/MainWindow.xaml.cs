@@ -1,5 +1,6 @@
 ﻿#region snippet_MainWindowClass
 using System;
+using System.IO.Ports;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -9,12 +10,15 @@ namespace SignalRChatClient
     public partial class MainWindow : Window
     {
         HubConnection connection;
+        static SerialPort _serialPort;
+
+
         public MainWindow()
         {
             InitializeComponent();
 
             connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:44388/ChatHub")
+                .WithUrl("http://localhost:59557/PlanetSelecterHub")
                 .Build();
 
             #region snippet_ClosedRestart
@@ -24,49 +28,42 @@ namespace SignalRChatClient
                 await connection.StartAsync();
             };
             #endregion
+
+            ConnectMethod();
+
+            //_serialPort = new SerialPort();
+            //_serialPort.PortName = "COM5";//Set your board COM
+            //_serialPort.BaudRate = 9600;
+            //_serialPort.Open();
+            //while (true)
+            //{
+            //    string planetId = _serialPort.ReadExisting();
+            //    if (planetId != "")
+            //    {
+            //      Console.WriteLine(planetId);
+                    string planetId = "1";
+                    SendPlanetId(planetId);
+            //    }
+            //}
         }
 
-        private async void connectButton_Click(object sender, RoutedEventArgs e)
+
+        private async Task ConnectMethod()
         {
-            #region snippet_ConnectionOn
-            connection.On<string>("ReceiveMessage", (message) =>
+            connection.On<string>("PlanetSelecter", (message) =>
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                   var newMessage = $"{message}";
-                   messagesList.Items.Add(newMessage);
+                    var newMessage = $"{message}";
                 });
             });
-            #endregion
-
-            try
-            {
-                await connection.StartAsync();
-                messagesList.Items.Add("Connection started");
-                connectButton.IsEnabled = false;
-                sendButton.IsEnabled = true;
-            }
-            catch (Exception ex)
-            {
-                messagesList.Items.Add(ex.Message);
-            }
+            
+            await connection.StartAsync();
         }
 
-        private async void sendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendPlanetId(string planetId)
         {
-            #region snippet_ErrorHandling
-            try
-            {
-                #region snippet_InvokeAsync
-                await connection.InvokeAsync("SendMessage", 
-                    messageTextBox.Text);
-                #endregion
-            }
-            catch (Exception ex)
-            {                
-                messagesList.Items.Add(ex.Message);                
-            }
-            #endregion
+                await connection.InvokeAsync("SendMessage", planetId);
         }
     }
 }
