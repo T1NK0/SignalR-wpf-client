@@ -67,7 +67,7 @@ namespace SignalRChatClient
             //Setup the serialport
             _serialPort = new SerialPort();
             //Define which com-port we are listening on
-            _serialPort.PortName = "COM9";//Set your board COM
+            _serialPort.PortName = "COM4";//Set your board COM
             //Defines the rate
             _serialPort.BaudRate = 9600;
             //Open the port so we can listen.
